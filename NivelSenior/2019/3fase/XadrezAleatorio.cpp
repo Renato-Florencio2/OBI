@@ -9,7 +9,7 @@ int possi = 0, dimensao;
 void rec(int pecasRes, int pos){
     if(pos == dimensao){
         possi++;
-        return;    
+        return;
     }
     if(pecasRes == dimensao-pos) rec(pecasRes-1, pos+1);
     else{
