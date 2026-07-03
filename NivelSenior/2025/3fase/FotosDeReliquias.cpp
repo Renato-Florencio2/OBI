@@ -27,8 +27,7 @@ __int32_t main(){
         if(l < 0 || l >= conjunto.size()) valor_l=0;
         else{
             if(conjunto[l] == -1) valor_l=0;
-            else valor_l = conjunto[l];
-            
+            else valor_l = conjunto[l];      
         }
         if(r < 0 || r >= conjunto.size()) valor_r=0;
         else{
