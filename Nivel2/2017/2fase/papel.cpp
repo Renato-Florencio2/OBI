@@ -1,102 +1,38 @@
+// https://neps.academy/br/exercise/27
+
 #include <bits/stdc++.h>
 using namespace std;
+#define int long long
 
-int main(){
+vector<int> vt;
+vector<pair<int, int>> sweep;
 
-    ios_base::sync_with_stdio(false);
-    cin.tie(0);
+__int32_t main(){
 
-    vector<pair<int, int>> papel;
-    int picos = 0, vales = 0;
-    unordered_map<int, int> mapaP, mapaV;
-    pair<int, int> pontaF, pontaB;
+    ios::sync_with_stdio(false); cin.tie(nullptr);
 
-    int casos;
-    cin>>casos;
-    for(int l = 0 ; l < casos ; l++){
-        int atual;
-        cin>>atual;
+    int n; cin>>n; vt.push_back(0);
+    for(int i = 0 ; i < n ; i++){
+        int x; cin>>x;
+        if(x != vt.back()) vt.push_back(x);
+    } vt.push_back(0);
 
-        if(int(papel.size()) == 0 || int(papel.size()) == 1){
-            if(int(papel.size()) == 0){
-                papel.push_back({atual, 0});
-                continue;
-            }else{
-                if(atual == papel.back().first) continue;
-                if(atual > papel.back().first){
-                    papel.back().second = -1;
-                    vales++;
-                    mapaV[papel.back().first]++;
-                    papel.push_back({atual, 1});
-                    picos++;
-                    mapaP[atual]++;
-                    continue;
-                }else{
-                    papel.back().second = 1;
-                    picos++;
-                    mapaP[papel.back().first]++;
-                    papel.push_back({atual, -1});
-                    vales++;
-                    mapaV[papel.back().first]++;
-                    continue;
-                }
-            }
-        }
-
-        if(atual == papel.back().first) continue;
-        if(papel.back().second == 1){
-            if(atual > papel.back().first){
-                mapaP[papel.back().first]--;
-                papel.back().first = atual;
-                mapaP[papel.back().first]++;
-                continue;
-            }else{
-                papel.push_back({atual, -1});
-                mapaV[atual]++;
-                vales++;
-                continue;
-            }
-        }else{
-            if(atual < papel.back().first){
-                mapaV[papel.back().first]--;
-                papel.back().first = atual;
-                mapaV[papel.back().first]++;
-                continue;
-            }else{
-                papel.push_back({atual, 1});
-                mapaP[atual]++;
-                picos++;
-                continue;
-            }
-        }
+    for(int i = 1 ; i < long(vt.size()-1) ; i++){
+        if(vt[i-1] > vt[i] && vt[i+1] > vt[i]) sweep.push_back({vt[i], 1});
+        else if(vt[i-1] < vt[i] && vt[i+1] < vt[i]) sweep.push_back({vt[i], 2});
     }
 
-    if(int(papel.size()) == 1 || int(papel.size()) == 2){
-        cout<<2<<"\n";
-        return 0;
+    sweep.push_back({0, 1});
+    sort(sweep.begin(), sweep.end());
+    
+    int resp = 0, at = 0;
+    for(auto i:sweep){
+        if(i.second == 1) at++;
+        else at--;
+        resp = max(resp, at);
     }
-
-    pontaB = papel.back();
-    pontaF = papel.front();
-    sort(papel.begin(), papel.end());
-
-    int ajuste = 0, total = 0;
-    for(int i = 0 ; i < int(papel.size()) ; i++){
-        if(papel[i].second == 1){
-            ajuste--;
-            continue;
-        }else{
-            if(papel[i] == papel[i-1]) continue;
-            int anomalia = 0;
-            if(pontaB.first > papel[i].first && pontaB.second == -1) anomalia++;
-            if(pontaF.first > papel[i].first && pontaF.second == -1) anomalia++;
-            total = max(total, ((picos - mapaP[papel[i].first]) - (vales - mapaV[papel[i].first]) + ajuste + anomalia));
-            ajuste+=mapaV[papel[i].first];
-            continue;
-        }
-    }
-
-    cout<<total+1<<"\n";
+    
+    cout<<resp+1<<"\n";
 
     return 0;
 }
